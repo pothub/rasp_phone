@@ -1,29 +1,22 @@
 import serial
-import pygame.mixer
 import time
 import shutil
+import os
 
-recv_file = "recv.mp3"
-copy_file = "copy.mp3"
 ser = serial.Serial('/dev/ttyUSB0', 38400)
 
-cycle_num = 200
-
-for num in range(cycle_num):
+while True:
     readline = lambda : iter(lambda:ser.read(1),"\n")
     while "".join(readline()) != "<<SENDFILE>>":
         pass
     print "recv start"
     start = time.time()
-    with open(recv_file,"wb") as outfile:
+    with open("recv.mp3","wb") as outfile:
         while True:
             line = "".join(readline())
             if line == "<<EOF>>":
                 break
             print >> outfile,line
-    print "recv end"
-    elapsed_lime = time.time() - start
-    print str(elapsed_lime)
-    shutil.copy(recv_file, copy_file)
-    f = open('watchdog_flag','w')
-    f.close()
+    print  "recv time:" + str(time.time() - start)
+    shutil.copy("recv.mp3", "copy.mp3")
+    os.system("mpg321 copy.mp3 > /dev/null 2>&1 &")
