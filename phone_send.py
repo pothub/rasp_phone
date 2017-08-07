@@ -31,8 +31,8 @@ def readline_timeout(fd, timeout = 1.0):
     (r, w, e) = select.select([fd], [], [], timeout)
     if   len(r) == 0: return "a"
 
+pool = Pool(2)
 while True:
-    pool = Pool(2)
     result = pool.apply_async(f)
     stream = p.open(format=FORMAT,
             channels=CHANNELS,
