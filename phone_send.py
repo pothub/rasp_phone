@@ -16,15 +16,16 @@ RATE = 16000
 RECORD_SECONDS = 1
 
 p = pyaudio.PyAudio()
-ser = serial.Serial('/dev/ttyUSB0', 38400)
+# ser = serial.Serial('/dev/ttyUSB0', 38400)
 
 def f():
     os.system("lame -b 16 record.wav record.mp3")
     print "start transfar audio data"
-    ser.write("<<SENDFILE>>\n")
-    readline = lambda : iter(lambda:ser.read(1),"\n")
-    ser.write(open("record.mp3","rb").read())
-    ser.write("\n<<EOF>>\n")
+    os.system("python send_920.py record.mp3")
+    # ser.write("<<SENDFILE>>\n")
+    # readline = lambda : iter(lambda:ser.read(1),"\n")
+    # ser.write(open("record.mp3","rb").read())
+    # ser.write("\n<<EOF>>\n")
     print "end transfar audio data"
 
 def readline_timeout(fd, timeout = 1.0):
